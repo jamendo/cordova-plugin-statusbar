@@ -19,7 +19,9 @@
 */
 package org.apache.cordova.statusbar;
 
+import android.app.ActivityManager;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
@@ -59,7 +61,17 @@ public class StatusBar extends CordovaPlugin {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
                 // Read 'StatusBarBackgroundColor' from config.xml, default is #000000.
-                setStatusBarBackgroundColor(preferences.getString("StatusBarBackgroundColor", "#000000"));
+                String color = preferences.getString("StatusBarBackgroundColor", "#000000");
+
+                ActivityManager activityManager = (ActivityManager) cordova.getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+                for(ActivityManager.AppTask appTask : activityManager.getAppTasks()) {
+                    if(appTask.getTaskInfo().id == cordova.getActivity().getTaskId()) {
+                        ActivityManager.TaskDescription description = appTask.getTaskInfo().taskDescription;
+                        cordova.getActivity().setTaskDescription(new ActivityManager.TaskDescription(description.getLabel(), description.getIcon(), Color.parseColor(color)));
+                    }
+                }
+
+                setStatusBarBackgroundColor(color);
             }
         });
     }
