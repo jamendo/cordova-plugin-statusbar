@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.util.List;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.CordovaInterface;
@@ -63,11 +65,14 @@ public class StatusBar extends CordovaPlugin {
                 // Read 'StatusBarBackgroundColor' from config.xml, default is #000000.
                 String color = preferences.getString("StatusBarBackgroundColor", "#000000");
 
-                ActivityManager activityManager = (ActivityManager) cordova.getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-                for(ActivityManager.AppTask appTask : activityManager.getAppTasks()) {
-                    if(appTask.getTaskInfo().id == cordova.getActivity().getTaskId()) {
-                        ActivityManager.TaskDescription description = appTask.getTaskInfo().taskDescription;
-                        cordova.getActivity().setTaskDescription(new ActivityManager.TaskDescription(description.getLabel(), description.getIcon(), Color.parseColor(color)));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityManager activityManager = (ActivityManager) cordova.getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+                
+                    for(ActivityManager.AppTask appTask : activityManager.getAppTasks()) {
+                        if(appTask.getTaskInfo().id == cordova.getActivity().getTaskId()) {
+                            ActivityManager.TaskDescription description = appTask.getTaskInfo().taskDescription;
+                            cordova.getActivity().setTaskDescription(new ActivityManager.TaskDescription(description.getLabel(), description.getIcon(), Color.parseColor(color)));
+                        }
                     }
                 }
 
