@@ -215,14 +215,15 @@ public class LockScreenPlayer extends CordovaPlugin {
         //if (playbackMode == PlayerActivity.Mode.TRACK)
         // Set action according to current state and playing track index
         notificationBuilder.addAction(android.R.drawable.ic_media_previous, "Prev", (disablePrevNext) ? null : this.prevPlaybackPendingIntent);
-        // Set action according to current state and playing track index
-        notificationBuilder.addAction(android.R.drawable.ic_media_next, "Next", (disablePrevNext) ? null : this.nextPlaybackPendingIntent);
         // Set play/pause action according to state
         if (isPlaying) {
             notificationBuilder.addAction(android.R.drawable.ic_media_pause, "Pause", this.pausePlaybackPendingIntent);
         } else {
             notificationBuilder.addAction(android.R.drawable.ic_media_play, "Play", this.startPlaybackPendingIntent);
         }
+        // Set action according to current state and playing track index
+        notificationBuilder.addAction(android.R.drawable.ic_media_next, "Next", (disablePrevNext) ? null : this.nextPlaybackPendingIntent);
+        
         // notificationBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", this.stopPlaybackPendingIntent);
 
         return notificationBuilder.build();
